@@ -1,0 +1,10 @@
+.pdfRenderer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.pdfRenderer .react-pdf__Page {
+  margin-bottom: 1rem;
+}
