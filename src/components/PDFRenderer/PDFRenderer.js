@@ -6,6 +6,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 function PDFRenderer({ file }) {
   const [machinedPieces, setMachinedPieces] = useState([])
+  const [piecesSummary, setPiecesSummary] = useState([])
 
   useEffect(() => {
     async function loadPDF() {
@@ -93,6 +94,7 @@ function PDFRenderer({ file }) {
       }
 
       setMachinedPieces(pieces)
+      setPiecesSummary(summarizePieces(pieces))
     }
 
     function filterMachiningReport(text) {
@@ -125,23 +127,96 @@ function PDFRenderer({ file }) {
       return filteredText
     }
 
+    function summarizePieces(pieces) {
+      const summary = {}
+
+      pieces.forEach(piece => {
+        if (piece.materialMoveTime !== undefined) {
+          if (!summary[piece.title]) {
+            summary[piece.title] = {
+              title: piece.title,
+              minMaterialMoveTime: parseFloat(piece.materialMoveTime),
+              maxMaterialMoveTime: parseFloat(piece.materialMoveTime),
+              sumMaterialMoveTime: parseFloat(piece.materialMoveTime),
+              count: 1,
+            }
+          } else {
+            const current = summary[piece.title]
+            current.minMaterialMoveTime = Math.min(
+              current.minMaterialMoveTime,
+              parseFloat(piece.materialMoveTime)
+            )
+            current.maxMaterialMoveTime = Math.max(
+              current.maxMaterialMoveTime,
+              parseFloat(piece.materialMoveTime)
+            )
+            current.sumMaterialMoveTime += parseFloat(piece.materialMoveTime)
+            current.count++
+          }
+        }
+      })
+
+      const piecesSummary = Object.values(summary).map(piece => ({
+        ...piece,
+        avgMaterialMoveTime: (piece.sumMaterialMoveTime / piece.count).toFixed(
+          3
+        ),
+      }))
+
+      return piecesSummary
+    }
+
     loadPDF()
   }, [file])
 
   return (
     <div className={styles.pdfRenderer}>
-      {machinedPieces.map((piece, index) => (
-        <div key={index} className={styles.piece}>
-          {piece.title} - Fecha: {piece.startDate} - Hora: {piece.startTime} -
-          Tiempo total: {piece.totalTime}
-          {piece.materialMoveTime !== undefined && (
-            <span>
-              {' '}
-              - Tiempo de movimiento de material: {piece.materialMoveTime} s
-            </span>
-          )}
-        </div>
-      ))}
+      <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
+      <table className={styles.summaryTable}>
+        <thead>
+          <tr>
+            <th>Pieza</th>
+            <th>Cantidad de piezas</th>
+            <th>Mov. de material (min) (s)</th>
+            <th>Mov. de material (max) (s)</th>
+            <th>Mov. de material (prom) (s)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {piecesSummary.map((piece, index) => (
+            <tr key={index}>
+              <td>{piece.title}</td>
+              <td>{piece.count}</td>
+              <td>{piece.minMaterialMoveTime}</td>
+              <td>{piece.maxMaterialMoveTime}</td>
+              <td>{piece.avgMaterialMoveTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <h2 className={styles.piecesListHeader}>Lista completa:</h2>
+      <table className={styles.completeTable}>
+        <thead>
+          <tr>
+            <th>Pieza</th>
+            <th>Fecha de inicio</th>
+            <th>Hora de inicio</th>
+            <th>Tiempo de mecanizado (s)</th>
+            <th>Tiempo de movimiento de material (s)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {machinedPieces.map((piece, index) => (
+            <tr key={index}>
+              <td>{piece.title}</td>
+              <td>{piece.startDate}</td>
+              <td>{piece.startTime}</td>
+              <td>{piece.totalTime}</td>
+              <td>{piece.materialMoveTime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }

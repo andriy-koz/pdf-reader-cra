@@ -8,3 +8,81 @@
 .pdfRenderer .react-pdf__Page {
   margin-bottom: 1rem;
 }
+
+.pdfRenderer {
+  font-family: Arial, sans-serif;
+  color: #333;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.piecesSummaryHeader,
+.piecesListHeader {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+.piece {
+  font-size: 1.1em;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.piece:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+.piece:last-child {
+  margin-bottom: 0;
+}
+
+.summaryTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.summaryTable th,
+.summaryTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.summaryTable th {
+  background-color: #eee;
+  font-weight: bold;
+}
+
+.summaryTable tbody tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+.completeTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.completeTable th,
+.completeTable td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.completeTable th {
+  background-color: #eee;
+  font-weight: bold;
+}
+
+.completeTable tbody tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
