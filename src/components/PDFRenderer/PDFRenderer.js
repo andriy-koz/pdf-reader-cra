@@ -43,6 +43,54 @@ function PDFRenderer({ file }) {
           }
         })
       }
+      for (let i = 1; i < pieces.length; i++) {
+        const prevPiece = pieces[i - 1]
+        const currPiece = pieces[i]
+
+        if (
+          prevPiece.startDate &&
+          prevPiece.startTime &&
+          currPiece.startDate &&
+          currPiece.startTime
+        ) {
+          const materialMoveTime = calculateMaterialMoveTime(
+            prevPiece,
+            currPiece
+          )
+          prevPiece.materialMoveTime = materialMoveTime
+        } else {
+          prevPiece.materialMoveTime = undefined
+        }
+      }
+      // Función para calcular el tiempo de movimiento de material
+      function calculateMaterialMoveTime(prevPiece, currPiece) {
+        const prevStartTime = new Date(
+          `${prevPiece.startDate}T${prevPiece.startTime}`
+        )
+        const currStartTime = new Date(
+          `${currPiece.startDate}T${currPiece.startTime}`
+        )
+        const timeDiff = (prevStartTime - currStartTime) / 1000
+        const prevTotalTime = timeStringToSeconds(prevPiece.totalTime)
+        const materialMoveTime = timeDiff - prevTotalTime
+        return materialMoveTime.toFixed(3)
+      }
+      /// Función para convertir el tiempo en formato HH:MM:SS.sss a segundos
+      function timeStringToSeconds(timeString) {
+        if (!timeString) return 0
+
+        const [hours, minutes, secondsAndMs] = timeString.split(':')
+
+        if (!hours || !minutes || !secondsAndMs) return 0
+
+        const [seconds, ms] = secondsAndMs.split('.')
+        return (
+          parseInt(hours, 10) * 3600 +
+          parseInt(minutes, 10) * 60 +
+          parseInt(seconds, 10) +
+          parseInt(ms, 10) / 1000
+        )
+      }
 
       setMachinedPieces(pieces)
     }
@@ -86,6 +134,12 @@ function PDFRenderer({ file }) {
         <div key={index} className={styles.piece}>
           {piece.title} - Fecha: {piece.startDate} - Hora: {piece.startTime} -
           Tiempo total: {piece.totalTime}
+          {piece.materialMoveTime !== undefined && (
+            <span>
+              {' '}
+              - Tiempo de movimiento de material: {piece.materialMoveTime} s
+            </span>
+          )}
         </div>
       ))}
     </div>
