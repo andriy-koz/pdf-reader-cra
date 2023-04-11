@@ -11,7 +11,7 @@ function PDFRenderer({ file }) {
     async function loadPDF() {
       if (!file) return
       const pdf = await pdfjs.getDocument(file).promise
-      const numPages = Math.min(10, pdf.numPages)
+      const numPages = pdf.numPages
       const pieces = []
 
       for (let i = 1; i <= numPages; i++) {
