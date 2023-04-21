@@ -137,7 +137,10 @@ function PDFRenderer({ file }) {
             summary[piece.title] = {
               title: piece.title,
               minMaterialMoveTime: parseFloat(piece.materialMoveTime),
-              maxMaterialMoveTime: parseFloat(piece.materialMoveTime),
+              maxMaterialMoveTime:
+                piece.materialMoveTime < 120
+                  ? parseFloat(piece.materialMoveTime)
+                  : 0,
               sumMaterialMoveTime: parseFloat(piece.materialMoveTime),
               count: 1,
             }
@@ -147,10 +150,15 @@ function PDFRenderer({ file }) {
               current.minMaterialMoveTime,
               parseFloat(piece.materialMoveTime)
             )
-            current.maxMaterialMoveTime = Math.max(
-              current.maxMaterialMoveTime,
-              parseFloat(piece.materialMoveTime)
-            )
+
+            // Solo actualizar maxMaterialMoveTime si el tiempo es menor a 120 segundos
+            if (
+              parseFloat(piece.materialMoveTime) < 180 &&
+              parseFloat(piece.materialMoveTime) > current.maxMaterialMoveTime
+            ) {
+              current.maxMaterialMoveTime = parseFloat(piece.materialMoveTime)
+            }
+
             current.sumMaterialMoveTime += parseFloat(piece.materialMoveTime)
             current.count++
           }
