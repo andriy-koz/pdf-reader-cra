@@ -100,9 +100,10 @@ function PDFRenderer({ file }) {
     function filterMachiningReport(text) {
       const titleMatches = [
         ...text.matchAll(
-          /(\d+、)(.*?)(\(Dibujo básico\)|\(Resultado de anidamiento\d*\))/g
+          /(\d+、)(.*?)(\(Dibujo básico\)|\(Resultado de anidamiento\d*\)|\(Resultado deanidamiento\d*\))/g
         ),
       ]
+
       const titles = titleMatches.map(match => match[2].trim())
 
       const startTimeMatches = [
