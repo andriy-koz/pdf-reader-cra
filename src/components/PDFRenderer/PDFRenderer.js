@@ -7,6 +7,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 function PDFRenderer({ file }) {
   const [machinedPieces, setMachinedPieces] = useState([])
   const [piecesSummary, setPiecesSummary] = useState([])
+  const [selectedDate, setSelectedDate] = useState('')
 
   useEffect(() => {
     async function loadPDF() {
@@ -178,6 +179,14 @@ function PDFRenderer({ file }) {
     loadPDF()
   }, [file])
 
+  function handleDateChange(event) {
+    setSelectedDate(event.target.value)
+  }
+
+  const filteredMachinedPieces = machinedPieces.filter(piece =>
+    selectedDate ? piece.startDate === selectedDate : true
+  )
+
   return (
     <div className={styles.pdfRenderer}>
       <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
@@ -203,7 +212,16 @@ function PDFRenderer({ file }) {
           ))}
         </tbody>
       </table>
-      <h2 className={styles.piecesListHeader}>Lista completa:</h2>
+
+      <label htmlFor='dateSelector'>Seleccionar fecha: </label>
+      <input
+        type='date'
+        id='dateSelector'
+        value={selectedDate || ''}
+        onChange={handleDateChange}
+      />
+
+      <h2 className={styles.piecesListHeader}>Lista filtrada:</h2>
       <table className={styles.completeTable}>
         <thead>
           <tr>
@@ -215,7 +233,7 @@ function PDFRenderer({ file }) {
           </tr>
         </thead>
         <tbody>
-          {machinedPieces.map((piece, index) => (
+          {filteredMachinedPieces.map((piece, index) => (
             <tr key={index}>
               <td>{piece.title}</td>
               <td>{piece.startDate}</td>
