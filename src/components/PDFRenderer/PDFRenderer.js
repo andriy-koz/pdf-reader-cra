@@ -91,10 +91,10 @@ function PDFRenderer({ file }) {
 
   const barChartData = prepareBarChartData(filteredMachinedPieces)
 
+  const filteredSummary = summarizePieces(filteredMachinedPieces)
+
   return (
     <div className={styles.pdfRenderer}>
-      <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
-      <SummaryTable piecesSummary={piecesSummary} />
       <label htmlFor='dateSelector'>Seleccionar fecha: </label>
       <input
         type='date'
@@ -102,6 +102,8 @@ function PDFRenderer({ file }) {
         value={selectedDate || ''}
         onChange={handleDateChange}
       />
+      <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
+      <SummaryTable piecesSummary={filteredSummary} />
       <h2 className={styles.piecesListHeader}>Gráfico de barras:</h2>
       <BarChart data={barChartData} />
     </div>
