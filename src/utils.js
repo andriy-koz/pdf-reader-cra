@@ -75,7 +75,6 @@ export function summarizePieces(pieces) {
 }
 
 export function calculateMaterialMoveTime(prevPiece, currPiece) {
-  console.log(prevPiece.totalTime)
   const prevStartTime = new Date(
     `${prevPiece.startDate}T${prevPiece.startTime}`
   )
@@ -113,13 +112,15 @@ export function prepareBarChartData(filteredMachinedPieces) {
       // Extraer la hora del tiempo de inicio
       const hour = piece.startTime.split(':')[0]
 
+      const cutTimeInt = timeStringToSeconds(piece.totalTime)
+
       if (!dataByHour[hour]) {
         dataByHour[hour] = {
-          cutTime: parseFloat(piece.totalTime),
+          cutTime: cutTimeInt,
           materialMoveTime: parseFloat(piece.materialMoveTime),
         }
       } else {
-        dataByHour[hour].cutTime += parseFloat(piece.totalTime)
+        dataByHour[hour].cutTime += cutTimeInt
         dataByHour[hour].materialMoveTime += parseFloat(piece.materialMoveTime)
       }
     }
