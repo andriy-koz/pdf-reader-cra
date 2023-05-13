@@ -14,6 +14,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 function PDFRenderer({ file }) {
   const [machinedPieces, setMachinedPieces] = useState([])
+  // eslint-disable-next-line no-unused-vars
   const [piecesSummary, setPiecesSummary] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
 
@@ -75,7 +76,11 @@ function PDFRenderer({ file }) {
       }
 
       setMachinedPieces(pieces)
-      setPiecesSummary(summarizePieces(pieces))
+      const summarizedPieces = summarizePieces(pieces)
+
+      if (summarizedPieces.length > 0) {
+        setPiecesSummary(summarizedPieces)
+      }
     }
 
     loadPDF()
@@ -103,7 +108,11 @@ function PDFRenderer({ file }) {
         onChange={handleDateChange}
       />
       <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
-      <SummaryTable piecesSummary={filteredSummary} />
+      {filteredSummary.length > 0 ? (
+        <SummaryTable piecesSummary={filteredSummary} />
+      ) : (
+        <p>No hay datos de resumen disponibles para la fecha seleccionada.</p>
+      )}
       <h2 className={styles.piecesListHeader}>Gráfico de barras:</h2>
       <BarChart data={barChartData} />
     </div>
