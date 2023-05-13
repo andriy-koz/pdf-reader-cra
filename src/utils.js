@@ -75,6 +75,7 @@ export function summarizePieces(pieces) {
 }
 
 export function calculateMaterialMoveTime(prevPiece, currPiece) {
+  console.log(prevPiece.totalTime)
   const prevStartTime = new Date(
     `${prevPiece.startDate}T${prevPiece.startTime}`
   )
@@ -83,7 +84,7 @@ export function calculateMaterialMoveTime(prevPiece, currPiece) {
   )
   const timeDiff = (prevStartTime - currStartTime) / 1000
   const prevTotalTime = timeStringToSeconds(prevPiece.totalTime)
-  const materialMoveTime = timeDiff - prevTotalTime
+  const materialMoveTime = timeDiff - prevTotalTime // Aquí deberías usar prevTotalTime en lugar de prevPiece.totalTime
   return materialMoveTime.toFixed(3)
 }
 
@@ -99,7 +100,7 @@ export function timeStringToSeconds(timeString) {
     parseInt(hours, 10) * 3600 +
     parseInt(minutes, 10) * 60 +
     parseInt(seconds, 10) +
-    parseInt(ms, 10) / 1000
+    parseFloat(ms, 10) / 1000
   )
 }
 
@@ -130,19 +131,23 @@ export function prepareBarChartData(filteredMachinedPieces) {
     hour => dataByHour[hour].materialMoveTime
   )
 
-  return {
+  const preparedData = {
     labels: labels,
     datasets: [
       {
         label: 'Tiempo de corte (s)',
         data: cutTimeData,
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        stack: 'Stack 0',
       },
       {
         label: 'Tiempo de movimiento de material (s)',
         data: materialMoveTimeData,
         backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        stack: 'Stack 0',
       },
     ],
   }
+
+  return preparedData
 }

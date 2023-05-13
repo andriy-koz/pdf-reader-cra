@@ -48,6 +48,7 @@ function PDFRenderer({ file }) {
                 startTime: startTime?.trim() || '',
                 totalTime: totalTime,
               }
+
               pieces.push(piece)
             }
           }
