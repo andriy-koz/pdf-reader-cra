@@ -44,28 +44,6 @@
   margin-bottom: 0;
 }
 
-.summaryTable {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.summaryTable th,
-.summaryTable td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.summaryTable th {
-  background-color: #eee;
-  font-weight: bold;
-}
-
-.summaryTable tbody tr:nth-child(even) {
-  background-color: #f8f8f8;
-}
-
 .completeTable {
   width: 100%;
   border-collapse: collapse;

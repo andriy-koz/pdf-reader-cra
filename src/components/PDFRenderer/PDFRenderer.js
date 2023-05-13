@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import * as pdfjs from 'pdfjs-dist'
 import styles from './PDFRenderer.module.css'
+import SummaryTable from '../SummaryTable'
+import {
+  filterMachiningReport,
+  summarizePieces,
+  calculateMaterialMoveTime,
+  prepareBarChartData,
+} from '../../utils'
+import BarChart from '../BarChart'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -64,116 +72,9 @@ function PDFRenderer({ file }) {
           prevPiece.materialMoveTime = undefined
         }
       }
-      // Función para calcular el tiempo de movimiento de material
-      function calculateMaterialMoveTime(prevPiece, currPiece) {
-        const prevStartTime = new Date(
-          `${prevPiece.startDate}T${prevPiece.startTime}`
-        )
-        const currStartTime = new Date(
-          `${currPiece.startDate}T${currPiece.startTime}`
-        )
-        const timeDiff = (prevStartTime - currStartTime) / 1000
-        const prevTotalTime = timeStringToSeconds(prevPiece.totalTime)
-        const materialMoveTime = timeDiff - prevTotalTime
-        return materialMoveTime.toFixed(3)
-      }
-      /// Función para convertir el tiempo en formato HH:MM:SS.sss a segundos
-      function timeStringToSeconds(timeString) {
-        if (!timeString) return 0
-
-        const [hours, minutes, secondsAndMs] = timeString.split(':')
-
-        if (!hours || !minutes || !secondsAndMs) return 0
-
-        const [seconds, ms] = secondsAndMs.split('.')
-        return (
-          parseInt(hours, 10) * 3600 +
-          parseInt(minutes, 10) * 60 +
-          parseInt(seconds, 10) +
-          parseInt(ms, 10) / 1000
-        )
-      }
 
       setMachinedPieces(pieces)
       setPiecesSummary(summarizePieces(pieces))
-    }
-
-    function filterMachiningReport(text) {
-      const titleMatches = [
-        ...text.matchAll(
-          /(\d+、)(.*?)(\(Dibujo básico\)|\(Resultado de anidamiento\d*\)|\(Resultado deanidamiento\d*\))/g
-        ),
-      ]
-
-      const titles = titleMatches.map(match => match[2].trim())
-
-      const startTimeMatches = [
-        ...text.matchAll(
-          /Tiempo de inicio：(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/g
-        ),
-      ]
-      const startTimes = startTimeMatches.map(match => match[1].trim())
-
-      const totalTimeMatches = [
-        ...text.matchAll(/Tiempo total：(\d{2}:\d{2}:\d{2}\.\d{3})/g),
-      ]
-      const totalTimes = totalTimeMatches.map(match => match[1].trim())
-
-      const filteredText = titles
-        .map(
-          (title, index) =>
-            `${title} - ${startTimes[index]} - Tiempo total: ${totalTimes[index]}`
-        )
-        .join('\n')
-
-      return filteredText
-    }
-
-    function summarizePieces(pieces) {
-      const summary = {}
-
-      pieces.forEach(piece => {
-        if (piece.materialMoveTime !== undefined) {
-          if (!summary[piece.title]) {
-            summary[piece.title] = {
-              title: piece.title,
-              minMaterialMoveTime: parseFloat(piece.materialMoveTime),
-              maxMaterialMoveTime:
-                piece.materialMoveTime < 120
-                  ? parseFloat(piece.materialMoveTime)
-                  : 0,
-              sumMaterialMoveTime: parseFloat(piece.materialMoveTime),
-              count: 1,
-            }
-          } else {
-            const current = summary[piece.title]
-            current.minMaterialMoveTime = Math.min(
-              current.minMaterialMoveTime,
-              parseFloat(piece.materialMoveTime)
-            )
-
-            // Solo actualizar maxMaterialMoveTime si el tiempo es menor a 120 segundos
-            if (
-              parseFloat(piece.materialMoveTime) < 180 &&
-              parseFloat(piece.materialMoveTime) > current.maxMaterialMoveTime
-            ) {
-              current.maxMaterialMoveTime = parseFloat(piece.materialMoveTime)
-            }
-
-            current.sumMaterialMoveTime += parseFloat(piece.materialMoveTime)
-            current.count++
-          }
-        }
-      })
-
-      const piecesSummary = Object.values(summary).map(piece => ({
-        ...piece,
-        avgMaterialMoveTime: (piece.sumMaterialMoveTime / piece.count).toFixed(
-          3
-        ),
-      }))
-
-      return piecesSummary
     }
 
     loadPDF()
@@ -187,32 +88,12 @@ function PDFRenderer({ file }) {
     selectedDate ? piece.startDate === selectedDate : true
   )
 
+  const barChartData = prepareBarChartData(filteredMachinedPieces)
+
   return (
     <div className={styles.pdfRenderer}>
       <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
-      <table className={styles.summaryTable}>
-        <thead>
-          <tr>
-            <th>Pieza</th>
-            <th>Cantidad de piezas</th>
-            <th>Mov. de material (min) (s)</th>
-            <th>Mov. de material (max) (s)</th>
-            <th>Mov. de material (prom) (s)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {piecesSummary.map((piece, index) => (
-            <tr key={index}>
-              <td>{piece.title}</td>
-              <td>{piece.count}</td>
-              <td>{piece.minMaterialMoveTime}</td>
-              <td>{piece.maxMaterialMoveTime}</td>
-              <td>{piece.avgMaterialMoveTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
+      <SummaryTable piecesSummary={piecesSummary} />
       <label htmlFor='dateSelector'>Seleccionar fecha: </label>
       <input
         type='date'
@@ -220,30 +101,8 @@ function PDFRenderer({ file }) {
         value={selectedDate || ''}
         onChange={handleDateChange}
       />
-
-      <h2 className={styles.piecesListHeader}>Lista filtrada:</h2>
-      <table className={styles.completeTable}>
-        <thead>
-          <tr>
-            <th>Pieza</th>
-            <th>Fecha de inicio</th>
-            <th>Hora de inicio</th>
-            <th>Tiempo de mecanizado (s)</th>
-            <th>Tiempo de movimiento de material (s)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredMachinedPieces.map((piece, index) => (
-            <tr key={index}>
-              <td>{piece.title}</td>
-              <td>{piece.startDate}</td>
-              <td>{piece.startTime}</td>
-              <td>{piece.totalTime}</td>
-              <td>{piece.materialMoveTime}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <h2 className={styles.piecesListHeader}>Gráfico de barras:</h2>
+      <BarChart data={barChartData} />
     </div>
   )
 }
