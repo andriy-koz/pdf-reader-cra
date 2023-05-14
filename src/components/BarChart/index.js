@@ -1,6 +1,8 @@
-import { Bar } from 'react-chartjs-2' // Asegúrate de haber importado Bar de 'react-chartjs-2'
+import React from 'react'
+import { Bar } from 'react-chartjs-2'
+import { Chart, registerables } from 'chart.js'
 
-function BarChart({ data }) {
+const BarChart = ({ data }) => {
   return (
     <div>
       <Bar
@@ -36,5 +38,7 @@ function BarChart({ data }) {
     </div>
   )
 }
+
+Chart.register(...registerables)
 
 export default BarChart
