@@ -10,8 +10,6 @@
 }
 
 .pdfRenderer {
-  font-family: Arial, sans-serif;
-  color: #333;
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
@@ -29,7 +27,6 @@
 
 .piece {
   font-size: 1.1em;
-  background-color: #f8f8f8;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
@@ -37,7 +34,6 @@
 }
 
 .piece:nth-child(even) {
-  background-color: #f1f1f1;
 }
 
 .piece:last-child {
@@ -57,10 +53,8 @@
 }
 
 .completeTable th {
-  background-color: #eee;
   font-weight: bold;
 }
 
 .completeTable tbody tr:nth-child(even) {
-  background-color: #f8f8f8;
 }

@@ -12,10 +12,8 @@
 }
 
 .summaryTable th {
-  background-color: #eee;
   font-weight: bold;
 }
 
 .summaryTable tbody tr:nth-child(even) {
-  background-color: #f8f8f8;
 }
