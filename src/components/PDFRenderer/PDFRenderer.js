@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import * as pdfjs from 'pdfjs-dist'
 import styles from './PDFRenderer.module.css'
 import SummaryTable from '../SummaryTable'
@@ -9,6 +9,7 @@ import {
   prepareBarChartData,
 } from '../../utils'
 import BarChart from '../BarChart'
+import { animateScroll } from 'react-scroll'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
@@ -17,6 +18,7 @@ function PDFRenderer({ file }) {
   // eslint-disable-next-line no-unused-vars
   const [piecesSummary, setPiecesSummary] = useState([])
   const [selectedDate, setSelectedDate] = useState('')
+  const summaryTableRef = useRef(null)
 
   useEffect(() => {
     async function loadPDF() {
@@ -86,6 +88,12 @@ function PDFRenderer({ file }) {
     loadPDF()
   }, [file])
 
+  useEffect(() => {
+    if (summaryTableRef.current && file) {
+      animateScroll.scrollTo(summaryTableRef.current.offsetTop)
+    }
+  }, [file, summaryTableRef])
+
   function handleDateChange(event) {
     setSelectedDate(event.target.value)
   }
@@ -109,7 +117,7 @@ function PDFRenderer({ file }) {
       />
       <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
       {filteredSummary.length > 0 ? (
-        <SummaryTable piecesSummary={filteredSummary} />
+        <SummaryTable piecesSummary={filteredSummary} ref={summaryTableRef} />
       ) : (
         <p>No hay datos de resumen disponibles para la fecha seleccionada.</p>
       )}

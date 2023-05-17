@@ -1,8 +1,9 @@
+import React from 'react'
 import styles from './SummaryTable.module.css'
 
-function SummaryTable({ piecesSummary }) {
+const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
   return (
-    <table className={styles.summaryTable}>
+    <table className={styles.summaryTable} ref={ref}>
       <thead>
         <tr>
           <th>Pieza</th>
@@ -25,6 +26,6 @@ function SummaryTable({ piecesSummary }) {
       </tbody>
     </table>
   )
-}
+})
 
 export default SummaryTable

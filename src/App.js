@@ -1,17 +1,42 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import FileUploader from './components/FileUploader/FileUploader'
 import PDFRenderer from './components/PDFRenderer/PDFRenderer'
+import LoadingBar from 'react-top-loading-bar'
+import { animateScroll as scroll } from 'react-scroll'
 import './styles.css'
 
 function App() {
   const [file, setFile] = useState(null)
+  const [progress, setProgress] = useState(0)
 
   const handleFileChange = newFile => {
+    setProgress(30)
     setFile(newFile)
   }
 
+  const scrollToPercentage = percentage => {
+    const pixelPosition =
+      document.documentElement.scrollHeight * (percentage / 100)
+    scroll.scrollTo(pixelPosition)
+  }
+
+  useEffect(() => {
+    if (file) {
+      setProgress(100) // Cuando el archivo se ha cargado, el progreso es 100%
+      setTimeout(() => {
+        setProgress(0) // Reseteamos la barra de progreso
+        scrollToPercentage(100) // Desplazamos hacia la sección de la tabla y el gráfico
+      }, 1000)
+    }
+  }, [file])
+
   return (
     <div className='app'>
+      <LoadingBar
+        color='#f11946'
+        progress={progress}
+        onLoaderFinished={() => setProgress(0)}
+      />
       <div className='video-background'>
         <video
           autoPlay
