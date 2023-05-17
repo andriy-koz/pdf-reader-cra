@@ -1,6 +1,46 @@
+@keyframes fillButton {
+  0% {
+    background-size: 0 100%;
+  }
+  100% {
+    background-size: 100% 100%;
+  }
+}
+
 .fileUploader {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+}
+
+.fileUploader input {
+  display: none;
+}
+
+.fileUploader button {
+  margin-top: 18px;
+  margin-bottom: 12px;
+  display: inline-block;
+  color: white;
+  font-size: large;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border: 2px solid #ccc;
+  border-radius: 100px;
+  background-color: rgba(0, 0, 0, 0);
+  background-image: linear-gradient(to right, red, red);
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s;
+  cursor: pointer;
+}
+
+.fileUploader button:hover {
+  background-size: 100% 100%;
+}
+
+.fileUploader p {
+  color: rgba(255, 255, 255, 0.9);
 }

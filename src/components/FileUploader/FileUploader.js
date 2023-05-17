@@ -4,6 +4,10 @@ import styles from './FileUploader.module.css'
 function FileUploader({ onFileChange }) {
   const fileInputRef = useRef()
 
+  const handleButtonClick = e => {
+    fileInputRef.current.click()
+  }
+
   const handleChange = async event => {
     const file = event.target.files[0]
     if (file) {
@@ -17,12 +21,14 @@ function FileUploader({ onFileChange }) {
 
   return (
     <div className={styles.fileUploader}>
+      <p>Selecciona un Informe Estadístico HSG para visualizarlo</p>
       <input
         ref={fileInputRef}
         type='file'
         accept='.pdf'
         onChange={handleChange}
       />
+      <button onClick={handleButtonClick}>Cargar PDF</button>
     </div>
   )
 }
