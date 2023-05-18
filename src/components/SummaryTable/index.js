@@ -7,10 +7,8 @@ const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
       <thead>
         <tr>
           <th>Pieza</th>
-          <th>Cantidad de piezas</th>
-          <th>Mov. de material (min) (s)</th>
-          <th>Mov. de material (max) (s)</th>
-          <th>Mov. de material (prom) (s)</th>
+          <th>Cantidad de chapas</th>
+          <th>Mejor tiempo de movimiento (s)</th>
         </tr>
       </thead>
       <tbody>
@@ -19,8 +17,6 @@ const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
             <td>{piece.title}</td>
             <td>{piece.count}</td>
             <td>{piece.minMaterialMoveTime}</td>
-            <td>{piece.maxMaterialMoveTime}</td>
-            <td>{piece.avgMaterialMoveTime}</td>
           </tr>
         ))}
       </tbody>

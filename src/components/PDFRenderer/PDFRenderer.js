@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import * as pdfjs from 'pdfjs-dist'
+import { useLocation } from 'react-router-dom'
 import styles from './PDFRenderer.module.css'
 import SummaryTable from '../SummaryTable'
 import {
@@ -13,7 +14,10 @@ import { animateScroll } from 'react-scroll'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
-function PDFRenderer({ file }) {
+function PDFRenderer() {
+  const location = useLocation()
+  const file = location?.state?.file || null
+
   const [machinedPieces, setMachinedPieces] = useState([])
   // eslint-disable-next-line no-unused-vars
   const [piecesSummary, setPiecesSummary] = useState([])

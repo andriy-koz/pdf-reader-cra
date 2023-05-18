@@ -75,6 +75,10 @@ export function summarizePieces(pieces) {
 }
 
 export function calculateMaterialMoveTime(prevPiece, currPiece) {
+  if (prevPiece.startDate !== currPiece.startDate) {
+    return '0.000'
+  }
+
   const prevStartTime = new Date(
     `${prevPiece.startDate}T${prevPiece.startTime}`
   )
@@ -83,7 +87,7 @@ export function calculateMaterialMoveTime(prevPiece, currPiece) {
   )
   const timeDiff = (prevStartTime - currStartTime) / 1000
   const prevTotalTime = timeStringToSeconds(prevPiece.totalTime)
-  const materialMoveTime = timeDiff - prevTotalTime // Aquí deberías usar prevTotalTime en lugar de prevPiece.totalTime
+  const materialMoveTime = timeDiff - prevTotalTime
   return materialMoveTime.toFixed(3)
 }
 
@@ -107,21 +111,23 @@ export function prepareBarChartData(filteredMachinedPieces) {
   const dataByHour = {}
 
   filteredMachinedPieces.forEach(piece => {
-    // Solo incluir la pieza si su tiempo de movimiento de material es menor a 5 minutos (300 segundos)
-    if (parseFloat(piece.materialMoveTime) < 300) {
-      // Extraer la hora del tiempo de inicio
-      const hour = piece.startTime.split(':')[0]
+    // Extraer la hora del tiempo de inicio
+    const hour = piece.startTime.split(':')[0]
+    const cutTimeInt = timeStringToSeconds(piece.totalTime)
+    const moveTime = parseFloat(piece.materialMoveTime)
 
-      const cutTimeInt = timeStringToSeconds(piece.totalTime)
-
-      if (!dataByHour[hour]) {
-        dataByHour[hour] = {
-          cutTime: cutTimeInt,
-          materialMoveTime: parseFloat(piece.materialMoveTime),
-        }
+    if (!dataByHour[hour]) {
+      dataByHour[hour] = {
+        cutTime: cutTimeInt,
+        materialMoveTime: moveTime < 300 ? moveTime : 0,
+        exceededMoveTime: moveTime >= 300 ? moveTime : 0,
+      }
+    } else {
+      dataByHour[hour].cutTime += cutTimeInt
+      if (moveTime < 300) {
+        dataByHour[hour].materialMoveTime += moveTime
       } else {
-        dataByHour[hour].cutTime += cutTimeInt
-        dataByHour[hour].materialMoveTime += parseFloat(piece.materialMoveTime)
+        dataByHour[hour].exceededMoveTime += moveTime
       }
     }
   })
@@ -130,6 +136,9 @@ export function prepareBarChartData(filteredMachinedPieces) {
   const cutTimeData = labels.map(hour => dataByHour[hour].cutTime)
   const materialMoveTimeData = labels.map(
     hour => dataByHour[hour].materialMoveTime
+  )
+  const exceededMoveTimeData = labels.map(
+    hour => dataByHour[hour].exceededMoveTime
   )
 
   const preparedData = {
@@ -145,6 +154,12 @@ export function prepareBarChartData(filteredMachinedPieces) {
         label: 'Tiempo de movimiento de material (s)',
         data: materialMoveTimeData,
         backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        stack: 'Stack 0',
+      },
+      {
+        label: 'Movimientos de material superiores a 300s',
+        data: exceededMoveTimeData,
+        backgroundColor: 'rgba(153, 102, 255, 0.6)', // Puedes cambiar esto al color que prefieras
         stack: 'Stack 0',
       },
     ],
