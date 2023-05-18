@@ -64,7 +64,6 @@ function PDFRenderer() {
       for (let i = 1; i < pieces.length; i++) {
         const prevPiece = pieces[i - 1]
         const currPiece = pieces[i]
-
         if (
           prevPiece.startDate &&
           prevPiece.startTime &&
@@ -76,11 +75,11 @@ function PDFRenderer() {
             currPiece
           )
           prevPiece.materialMoveTime = materialMoveTime
+          prevPiece.endTime = currPiece.startTime // guardamos la hora de fin del movimiento de material como la hora de inicio de la pieza actual
         } else {
           prevPiece.materialMoveTime = undefined
         }
       }
-
       setMachinedPieces(pieces)
       const summarizedPieces = summarizePieces(pieces)
 

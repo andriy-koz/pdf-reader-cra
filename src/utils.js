@@ -44,6 +44,8 @@ export function summarizePieces(pieces) {
               : 0,
           sumMaterialMoveTime: parseFloat(piece.materialMoveTime),
           count: 1,
+          startTime: piece.startTime,
+          endTime: piece.startTime,
         }
       } else {
         const current = summary[piece.title]
@@ -52,7 +54,6 @@ export function summarizePieces(pieces) {
           parseFloat(piece.materialMoveTime)
         )
 
-        // Solo actualizar maxMaterialMoveTime si el tiempo es menor a 120 segundos
         if (
           parseFloat(piece.materialMoveTime) < 180 &&
           parseFloat(piece.materialMoveTime) > current.maxMaterialMoveTime
@@ -62,6 +63,8 @@ export function summarizePieces(pieces) {
 
         current.sumMaterialMoveTime += parseFloat(piece.materialMoveTime)
         current.count++
+        current.startTime = minTime(current.startTime, piece.startTime)
+        current.endTime = maxTime(current.endTime, piece.startTime)
       }
     }
   })
@@ -72,6 +75,26 @@ export function summarizePieces(pieces) {
   }))
 
   return piecesSummary
+}
+
+function minTime(time1, time2) {
+  const [hours1, minutes1] = time1.split(':').map(Number)
+  const [hours2, minutes2] = time2.split(':').map(Number)
+
+  if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+    return time1
+  }
+  return time2
+}
+
+function maxTime(time1, time2) {
+  const [hours1, minutes1] = time1.split(':').map(Number)
+  const [hours2, minutes2] = time2.split(':').map(Number)
+
+  if (hours1 > hours2 || (hours1 === hours2 && minutes1 > minutes2)) {
+    return time1
+  }
+  return time2
 }
 
 export function calculateMaterialMoveTime(prevPiece, currPiece) {
