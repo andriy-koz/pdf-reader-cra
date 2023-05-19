@@ -4,6 +4,7 @@ import PDFRenderer from './components/PDFRenderer/PDFRenderer'
 import LoadingBar from 'react-top-loading-bar'
 import { animateScroll as scroll } from 'react-scroll'
 import {
+  // eslint-disable-next-line no-unused-vars
   BrowserRouter as Router,
   Routes,
   Route,
