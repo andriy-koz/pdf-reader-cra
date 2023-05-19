@@ -72,7 +72,7 @@ function App() {
               </video>
               <div className='overlay'></div>
               <div className='title-background'>
-                <h1 className='title'>Skb Laser Tracer</h1>
+                <h1 className='title'>HSG Laser Tracer</h1>
                 <div className='underline'></div>
                 <FileUploader onFileChange={handleFileChange} />
               </div>
