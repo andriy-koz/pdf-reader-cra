@@ -1,10 +1,11 @@
 // Home.js
-import React from 'react'
-import FileUploader from '../FileUploader/FileUploader'
+import React from 'react';
+import FileUploader from '../FileUploader/FileUploader';
+import styles from './Home.module.css';
 
 const Home = ({ onFileChange }) => {
   return (
-    <div className='video-background'>
+    <div className={styles['video-background']}>
       <video
         autoPlay
         loop
@@ -24,14 +25,14 @@ const Home = ({ onFileChange }) => {
           type='video/mp4'
         />
       </video>
-      <div className='overlay'></div>
-      <div className='title-background'>
-        <h1 className='title'>HSG Laser Tracer</h1>
-        <div className='underline'></div>
+      <div className={styles['overlay']}></div>
+      <div className={styles['title-background']}>
+        <h1 className={styles['title']}>HSG Laser Tracer</h1>
+        <div className={styles['underline']}></div>
         <FileUploader onFileChange={onFileChange} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

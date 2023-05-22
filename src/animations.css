@@ -1,0 +1,46 @@
+/* animations.css */
+
+@keyframes title {
+  0% {
+    color: var(--primary-color);
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(10%);
+  }
+  60% {
+    transform: translateX(0);
+  }
+  70%,
+  80%,
+  90% {
+    color: var(--primary-color);
+  }
+  75%,
+  85%,
+  100% {
+    color: white;
+  }
+}
+
+@keyframes underline {
+  0%,
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 200px;
+  }
+}
+
+@keyframes title-background {
+  0%,
+  50% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}

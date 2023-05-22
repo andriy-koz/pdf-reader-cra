@@ -1,55 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('./animations.css');
 
 :root {
   --background-color: #010a1a;
   --primary-color: #ed1c24;
   --font-family: 'Roboto', sans-serif;
-}
-
-/* Keyframes */
-@keyframes title {
-  0% {
-    color: var(--primary-color);
-    opacity: 0;
-    transform: translateX(-50%);
-  }
-  30% {
-    opacity: 1;
-    transform: translateX(10%);
-  }
-  60% {
-    transform: translateX(0);
-  }
-  70%,
-  80%,
-  90% {
-    color: var(--primary-color);
-  }
-  75%,
-  85%,
-  100% {
-    color: white;
-  }
-}
-
-@keyframes underline {
-  0%,
-  50% {
-    width: 0;
-  }
-  100% {
-    width: 200px;
-  }
-}
-
-@keyframes title-background {
-  0%,
-  50% {
-    background-color: rgba(0, 0, 0, 0);
-  }
-  100% {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
 }
 
 body {
@@ -58,48 +13,4 @@ body {
   background-color: var(--background-color);
   margin: 0;
   padding: 0;
-}
-
-.video-background {
-  position: absolute;
-  top: -60px;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  overflow: hidden;
-}
-
-.app .title {
-  text-align: center;
-  margin: 92px auto 4px;
-  padding-top: 32px;
-  animation: title 1.4s ease-out;
-}
-
-.app .underline {
-  width: 200px;
-  height: 4px;
-  background-color: var(--primary-color);
-  margin: 0 auto;
-  animation: underline 1.5s ease-out;
-}
-
-.overlay {
-  z-index: -1;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background-image: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.5),
-    rgba(0, 0, 0, 0.8)
-  );
-}
-
-.app .title-background {
-  background-color: rgba(0, 0, 0, 0.5);
-  animation: title-background 1.5s ease-out;
-  transform: translateY(75%);
 }
