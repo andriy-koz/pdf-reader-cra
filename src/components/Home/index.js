@@ -1,6 +1,6 @@
 // Home.js
 import React from 'react';
-import FileUploader from '../FileUploader/FileUploader';
+import FileUploader from '../FileUploader';
 import styles from './Home.module.css';
 
 const Home = ({ onFileChange }) => {
