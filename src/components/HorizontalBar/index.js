@@ -1,10 +1,11 @@
-import React from 'react'
-import { Bar } from 'react-chartjs-2'
-import { Chart, registerables } from 'chart.js'
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import { Chart, registerables } from 'chart.js';
+import styles from './HorizontalBar.module.css';
 
 const BarChart = ({ data }) => {
   return (
-    <div>
+    <div className={styles.bar}>
       <Bar
         data={data}
         options={{
@@ -19,7 +20,7 @@ const BarChart = ({ data }) => {
                 display: true,
                 labelString: 'Piezas',
               },
-              stacked: true, // Agregado para apilar las barras
+              stacked: true,
             },
             y: {
               display: true,
@@ -37,9 +38,9 @@ const BarChart = ({ data }) => {
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-Chart.register(...registerables)
+Chart.register(...registerables);
 
-export default BarChart
+export default BarChart;

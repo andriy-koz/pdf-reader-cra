@@ -43,13 +43,11 @@ function PDFRenderer() {
         selectedDate={selectedDate}
         onDateChange={handleDateChange}
       />
-      <h2 className={styles.piecesSummaryHeader}>Resumen:</h2>
       {filteredSummary.length > 0 ? (
         <SummaryTable piecesSummary={filteredSummary} ref={summaryTableRef} />
       ) : (
         <p>No hay datos de resumen disponibles para la fecha seleccionada.</p>
       )}
-      <h2 className={styles.piecesListHeader}>Gráfico de barras:</h2>
       <BarChart data={barChartData} />
     </div>
   );

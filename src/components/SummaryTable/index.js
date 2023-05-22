@@ -1,37 +1,37 @@
-import React, { useState } from 'react'
-import styles from './SummaryTable.module.css'
-import HorizontalBar from '../HorizontalBar'
+import React, { useState } from 'react';
+import styles from './SummaryTable.module.css';
+import HorizontalBar from '../HorizontalBar';
 
 const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
   const [piecesPerSheet, setPiecesPerSheet] = useState(
     piecesSummary.reduce((acc, curr) => {
-      acc[curr.title] = 1
-      return acc
+      acc[curr.title] = 1;
+      return acc;
     }, {})
-  )
+  );
 
   function handlePiecesPerSheetChange(title, event) {
-    const newPiecesPerSheet = { ...piecesPerSheet }
-    newPiecesPerSheet[title] = parseInt(event.target.value)
-    setPiecesPerSheet(newPiecesPerSheet)
+    const newPiecesPerSheet = { ...piecesPerSheet };
+    newPiecesPerSheet[title] = parseInt(event.target.value);
+    setPiecesPerSheet(newPiecesPerSheet);
   }
 
   function calculateAverageTime(piece) {
-    const startTime = parseTime(piece.startTime)
-    const endTime = parseTime(piece.endTime)
-    const elapsedTime = (endTime - startTime) / 1000 // convert to seconds
-    const totalPieces = piece.count * piecesPerSheet[piece.title]
-    return (elapsedTime / totalPieces).toFixed(3)
+    const startTime = parseTime(piece.startTime);
+    const endTime = parseTime(piece.endTime);
+    const elapsedTime = (endTime - startTime) / 1000; // convert to seconds
+    const totalPieces = piece.count * piecesPerSheet[piece.title];
+    return (elapsedTime / totalPieces).toFixed(3);
   }
 
   function parseTime(time) {
-    const [hours, minutes] = time.split(':').map(Number)
-    return hours * 3600 * 1000 + minutes * 60 * 1000 // convert to milliseconds
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 3600 * 1000 + minutes * 60 * 1000; // convert to milliseconds
   }
 
   function getChartData() {
-    const labels = piecesSummary.map(piece => piece.title)
-    const data = piecesSummary.map(piece => calculateAverageTime(piece))
+    const labels = piecesSummary.map(piece => piece.title);
+    const data = piecesSummary.map(piece => calculateAverageTime(piece));
 
     return {
       labels,
@@ -39,16 +39,16 @@ const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
         {
           label: 'Tiempo promedio por pieza (s)',
           data,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)', // puedes personalizar el color aquí
-          borderColor: 'rgba(75, 192, 192, 1)', // y aquí
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 1,
         },
       ],
-    }
+    };
   }
 
   return (
-    <>
+    <div>
       <table className={styles.summaryTable} ref={ref}>
         <thead>
           <tr>
@@ -84,8 +84,8 @@ const SummaryTable = React.forwardRef(({ piecesSummary }, ref) => {
         </tbody>
       </table>
       <HorizontalBar data={getChartData()} />
-    </>
-  )
-})
+    </div>
+  );
+});
 
-export default SummaryTable
+export default SummaryTable;

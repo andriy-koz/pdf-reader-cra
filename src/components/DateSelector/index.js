@@ -1,6 +1,8 @@
+import styles from './DateSelector.module.css';
+
 function DateSelector({ selectedDate, onDateChange }) {
   return (
-    <>
+    <div className={styles['date-selector']}>
       <label htmlFor='dateSelector'>Seleccionar fecha: </label>
       <input
         type='date'
@@ -8,7 +10,7 @@ function DateSelector({ selectedDate, onDateChange }) {
         value={selectedDate || ''}
         onChange={onDateChange}
       />
-    </>
+    </div>
   );
 }
 
