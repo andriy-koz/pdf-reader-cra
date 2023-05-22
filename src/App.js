@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
-import FileUploader from './components/FileUploader/FileUploader'
-import PDFRenderer from './components/PDFRenderer/PDFRenderer'
 import LoadingBar from 'react-top-loading-bar'
 import { animateScroll as scroll } from 'react-scroll'
 import {
-  // eslint-disable-next-line no-unused-vars
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
 } from 'react-router-dom'
+import Home from './components/Home'
+import FileLoaded from './components/FileLoaded'
 import './styles.css'
 
 function App() {
@@ -47,42 +46,8 @@ function App() {
         onLoaderFinished={() => setProgress(0)}
       />
       <Routes>
-        <Route
-          path='/'
-          element={
-            <div className='video-background'>
-              <video
-                autoPlay
-                loop
-                muted
-                style={{
-                  position: 'absolute',
-                  width: '100%',
-                  left: '50%',
-                  top: '50%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transform: 'translate(-50%, -50%)',
-                  zIndex: '-1',
-                }}>
-                <source
-                  src={process.env.PUBLIC_URL + '/maquina-laser-18533.mp4'}
-                  type='video/mp4'
-                />
-              </video>
-              <div className='overlay'></div>
-              <div className='title-background'>
-                <h1 className='title'>HSG Laser Tracer</h1>
-                <div className='underline'></div>
-                <FileUploader onFileChange={handleFileChange} />
-              </div>
-            </div>
-          }
-        />
-        <Route
-          path='/file-loaded'
-          element={file ? <PDFRenderer file={file} /> : null}
-        />
+        <Route path='/' element={<Home onFileChange={handleFileChange} />} />
+        <Route path='/file-loaded' element={<FileLoaded file={file} />} />
       </Routes>
     </div>
   )
