@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# HSG LASER TRACER
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+#### Video Demo:  <https://youtu.be/3tbC8TfGZG0>
 
-## Available Scripts
+#### Description:
+HSG Laser Tracer is a web-based application developed using React that provides insightful analytics on machined pieces. It processes information from uploaded PDFs, extracting relevant data for summarization and visualization. This tool focuses on efficiency in data extraction and processing using modern web technologies.
 
-In the project directory, you can run:
+#### Overview:
+At its core, the HSG Laser Tracer is a web application using the React library. The application leverages modern JavaScript features and React hooks for state management and side effects, such as useState and useEffect. It also takes advantage of the react-router-dom library to manage the application's routing.
 
-### `npm start`
+The application utilizes the pdfjs-dist library to handle PDF processing, extracting text content from uploaded files. All text manipulation is done using JavaScript's built-in string and regular expression operations.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### The application is split into several main parts:
+- The App component (located in /src/App.js), which is the root component of the application. This component manages the file upload process and navigation through the application.
+- The Home component (located in /src/components/Home.js), which serves as the landing page for the application. From here, users can upload their PDF files.
+- The PDFRenderer component (located in /src/components/PDFRenderer.js), which is responsible for rendering data and analytics based on the uploaded PDF file.
+- The usePDFProcessing hook (located in /src/hooks/usePDFProcessing.js), which encapsulates the logic for processing the PDF file and extracting the necessary data.
+- The utility functions (located in /src/utils.js), which contain various helper functions used throughout the application.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### Detailed Breakdown:
+In terms of data extraction and processing, the application operates in a sequence of defined steps:
 
-### `npm test`
+1. The user uploads a PDF file via the FileUploader component on the Home page.
+2. The App component's handleFileChange function updates the file state and triggers a navigation to the /file-loaded route, passing along the uploaded file.
+3. The PDFRenderer component takes over, receiving the file as part of the route's state. This component then initiates the PDF processing by calling the usePDFProcessing hook.
+4. The usePDFProcessing hook leverages pdfjs to parse the uploaded file, extracting text content for further processing.
+5. As the text content is being extracted, it is immediately filtered through the filterMachiningReport function to extract relevant parts of the machining report using regular expressions.
+6. The extracted parts are then processed further to create an array of "machined pieces". Each piece is an object containing specific attributes like title, startDate, startTime, and totalTime.
+7. These machined pieces are then summarized using the summarizePieces function. The summarization includes calculating minimum, maximum, sum, and average of material move times, and determining the start and end times for each title.
+8. Finally, the summarized data is used to prepare data for a bar chart representation using the prepareBarChartData function. The final chart displays cut time, material move time, and exceeded move times.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application includes error handling for unusual cases, such as missing or malformed data within the PDF files. It also ensures that the user interface remains responsive and informative, with a loading bar showing progress and proper navigation routes to guide the user through the process.
 
-### `npm run build`
+In summary, the HSG Laser Tracer provides a streamlined interface and an efficient way of processing PDF data, enabling users to glean insightful analytics and summaries for machined pieces. It highlights the power of modern web technologies in handling complex data processing and visualization tasks.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### How to Run:
+- Clone the repository to your local machine
+- Install all necessary dependencies by running npm install or yarn install
+- Start the application by running npm start or yarn start
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+#### Note:
+This application is best suited for processing machining reports that follow a specific format. If the input PDFs deviate significantly from the expected format, the output may not be accurate.
